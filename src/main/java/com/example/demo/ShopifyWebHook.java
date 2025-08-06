@@ -17,7 +17,7 @@ public class ShopifyWebHook {
 
     @GetMapping
     public String healthCheck(){
-        return "working";
+        return "working 2";
     }
 
 

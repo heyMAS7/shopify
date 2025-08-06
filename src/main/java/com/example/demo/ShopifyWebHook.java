@@ -1,6 +1,8 @@
 package com.example.demo;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,8 @@ public class ShopifyWebHook {
 
 
     @PostMapping("/shop")
-    public void callback(@RequestBody Map<String, Objects> body){
-        System.out.println(body);
+    public ResponseEntity<?> callback(@RequestBody JsonNode jsonNode){
+        System.out.println("Webhook received: " + jsonNode.toPrettyString());
+        return ResponseEntity.ok(jsonNode.toPrettyString());
     }
 }

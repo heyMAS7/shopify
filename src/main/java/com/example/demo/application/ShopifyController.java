@@ -47,6 +47,7 @@ public class ShopifyController {
                         .path("/wp-json/wc/v3/products")
                         .queryParam("sku", latest.getSku())
                         .build())
+                .header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<WooCommerceProductDTO>>() {})
                 .block();
@@ -64,6 +65,7 @@ public class ShopifyController {
                             .host("ecom-tiheymas-agdwu.wpcomstaging.com")
                             .path("/wp-json/wc/v3/products/{id}")
                             .build(productId))
+					.header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
                     .retrieve()
                     .toBodilessEntity()
                     .map(response -> {

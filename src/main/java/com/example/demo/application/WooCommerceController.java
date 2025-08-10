@@ -42,12 +42,14 @@ public class WooCommerceController {
         String locationId = extractIdFromGid(gidLocation);
         String inventoryItemId = extractIdFromGid(gidInventoryItem);
 
+        Map<String, String> body = Map.of("location_id", locationId,
+                "inventory_item_id", inventoryItemId,
+                "available", wooCommerceCallbackRequest.getStockQuantity());
+
         JsonNode block = webClient.post()
                 .uri("https://h1f00y-jb.myshopify.com/admin/api/2025-01/inventory_levels/set.json")
                 .header("X-Shopify-Access-Token", environment.getProperty("Shopify_Token"))
-                .bodyValue(Map.of("location_id", locationId,
-                        "inventory_item_id", inventoryItemId,
-                        "available", wooCommerceCallbackRequest.getStockQuantity()))
+                .bodyValue(body)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .block();

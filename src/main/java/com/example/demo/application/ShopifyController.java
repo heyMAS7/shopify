@@ -65,7 +65,7 @@ public class ShopifyController {
                             .path("/wp-json/wc/v3/products/{id}")
                             .build(productId))
 					.header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
-                    .bodyValue(Map.of("stock_quantity", latest.getSku()))
+                    .bodyValue(Map.of("stock_quantity", latest.getInventoryQuantity()))
                     .retrieve()
                     .toBodilessEntity()
                     .map(response -> {

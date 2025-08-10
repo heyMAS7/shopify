@@ -33,6 +33,9 @@ public class ShopifyCallbackRequest {
         @JsonProperty("product_id")
         private long productId;
 
+        @JsonProperty("inventory_quantity")
+        private long inventoryQuantity;
+
 
     }
 }

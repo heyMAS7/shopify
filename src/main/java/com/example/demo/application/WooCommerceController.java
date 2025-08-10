@@ -43,7 +43,7 @@ public class WooCommerceController {
         String inventoryItemId = extractIdFromGid(gidInventoryItem);
 
         JsonNode block = webClient.post()
-                .uri("https://nramkn-f8.myshopify.com/admin/api/2025-01/inventory_levels/set.json")
+                .uri("https://h1f00y-jb.myshopify.com/admin/api/2025-01/inventory_levels/set.json")
                 .header("X-Shopify-Access-Token", environment.getProperty("Shopify_Token"))
                 .bodyValue(Map.of("location_id", locationId,
                         "inventory_item_id", inventoryItemId,
@@ -97,7 +97,7 @@ public class WooCommerceController {
         """.formatted(sku);
 
         return webClient.post()
-                .uri("https://nramkn-f8.myshopify.com/admin/api/2025-01/graphql.json")
+                .uri("https://h1f00y-jb.myshopify.com/admin/api/2025-01/graphql.json")
                 .header("Content-Type", "application/json")
                 .header("X-Shopify-Access-Token", environment.getProperty("Shopify_Token"))
                 .bodyValue("{\"query\":\"" + query.replace("\"", "\\\"").replace("\n", " ") + "\"}")

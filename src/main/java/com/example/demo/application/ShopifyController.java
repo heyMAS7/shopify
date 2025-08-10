@@ -14,6 +14,7 @@ import org.springframework.web.util.UriBuilder;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("shopify")
@@ -37,8 +38,6 @@ public class ShopifyController {
                 .orElse(null);
 
         assert latest != null;
-
-        latest.setSku("123");
 
         List<WooCommerceProductDTO> productDTO = webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -66,6 +65,7 @@ public class ShopifyController {
                             .path("/wp-json/wc/v3/products/{id}")
                             .build(productId))
 					.header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
+                    .bodyValue(Map.of("stock_quantity", latest.getSku()))
                     .retrieve()
                     .toBodilessEntity()
                     .map(response -> {

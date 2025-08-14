@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @Getter
 public class WooCommerceProviderProperties {
-    private String baseURL = "https://el-lbs.com";
+    private String baseURL = "el-lbs.com";
 
     private String consumerKey;
 

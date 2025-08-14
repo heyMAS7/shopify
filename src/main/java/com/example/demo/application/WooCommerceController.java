@@ -6,6 +6,7 @@ import com.example.demo.domain.WooCommerceCallbackRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +29,8 @@ public class WooCommerceController {
 
     private final String baseURl = "https://1v6ir0-d1.myshopify.com";
 
-    @PostMapping("/updateProduct")
-    public ResponseEntity<?> updateProductCallback(@RequestBody WooCommerceCallbackRequest wooCommerceCallbackRequest){
+    @PostMapping(value = "/updateProduct", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> updateProductCallback(WooCommerceCallbackRequest wooCommerceCallbackRequest){
 
         ShopifyGraphQLResponse resp = getProductBySku(wooCommerceCallbackRequest.getSku()).block();
 

@@ -62,14 +62,15 @@ public class ShopifyController {
 
         if (!productDTO.isEmpty()){
 
-            String productId = productDTO.get(0).getId();
+            String variantId = productDTO.get(0).getId();
+            String productId = productDTO.get(0).getParentId();
 
             webClient.put()
                     .uri(uriBuilder -> uriBuilder
                             .scheme("https")
                             .host(wooCommerceProviderProperties.getBaseURL())
-                            .path("/wp-json/wc/v3/products/{id}")
-                            .build(productId))
+                            .path("/wp-json/wc/v3/products/{productId}/variations/{variantId}")
+                            .build(productId,variantId))
                     .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY"), environment.getProperty("WOO_CONSUMER_SECRET")))
                     .bodyValue(Map.of("stock_quantity", latest.getInventoryQuantity()))
                     .retrieve()

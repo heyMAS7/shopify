@@ -13,6 +13,9 @@ public class WooCommerceCallbackRequest {
 
     private String slug;
 
+    @JsonAlias("parent_id")
+    private String parentId;
+
     private String sku;
     @JsonAlias("stock_quantity")
     private String stockQuantity;

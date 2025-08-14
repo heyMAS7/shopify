@@ -31,8 +31,8 @@ public class WooCommerceController {
 
     private final String baseURl = "https://1v6ir0-d1.myshopify.com";
 
-    @PostMapping(value = "/updateProduct", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<?> updateProductCallback(WooCommerceCallbackRequest wooCommerceCallbackRequest){
+    @PostMapping(value = "/updateProduct", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateProductCallback(@RequestBody WooCommerceCallbackRequest wooCommerceCallbackRequest){
 
         ShopifyGraphQLResponse resp = getProductBySku(wooCommerceCallbackRequest.getSku()).block();
 

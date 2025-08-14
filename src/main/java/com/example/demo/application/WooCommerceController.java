@@ -5,7 +5,6 @@ import com.example.demo.domain.ShopifyGraphQLResponse;
 import com.example.demo.domain.WooCommerceCallbackRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +26,8 @@ public class WooCommerceController {
 
     private final Environment environment;
 
+    private final String baseURl = "https://1v6ir0-d1.myshopify.com";
+
     @PostMapping("/updateProduct")
     public ResponseEntity<?> updateProductCallback(@RequestBody WooCommerceCallbackRequest wooCommerceCallbackRequest){
 
@@ -47,7 +48,7 @@ public class WooCommerceController {
                 "available", wooCommerceCallbackRequest.getStockQuantity());
 
         JsonNode block = webClient.post()
-                .uri("https://h1f00y-jb.myshopify.com/admin/api/2025-01/inventory_levels/set.json")
+                .uri(baseURl + "/admin/api/2025-01/inventory_levels/set.json")
                 .header("X-Shopify-Access-Token", environment.getProperty("Shopify_Token"))
                 .bodyValue(body)
                 .retrieve()
@@ -99,7 +100,7 @@ public class WooCommerceController {
         """.formatted(sku);
 
         return webClient.post()
-                .uri("https://h1f00y-jb.myshopify.com/admin/api/2025-01/graphql.json")
+                .uri(baseURl + "/admin/api/2025-01/graphql.json")
                 .header("Content-Type", "application/json")
                 .header("X-Shopify-Access-Token", environment.getProperty("Shopify_Token"))
                 .bodyValue("{\"query\":\"" + query.replace("\"", "\\\"").replace("\n", " ") + "\"}")

@@ -3,9 +3,11 @@ package com.example.demo.application;
 
 import com.example.demo.domain.ShopifyCallbackRequest;
 import com.example.demo.domain.WooCommerceProductDTO;
+import com.example.demo.domain.WooCommerceProviderProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,7 +31,9 @@ public class ShopifyController {
         return "working 2";
     }
 
+    private final WooCommerceProviderProperties wooCommerceProviderProperties;
 
+    private final Environment environment;
     @PostMapping("/shop")
     public ResponseEntity<?> callback(@RequestBody ShopifyCallbackRequest shopifyCallbackRequest){
 
@@ -39,14 +43,17 @@ public class ShopifyController {
 
         assert latest != null;
 
+        log.info(latest.toString());
+
         List<WooCommerceProductDTO> productDTO = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
-                        .host("ecom-tiheymas-agdwu.wpcomstaging.com")
+                        .host(wooCommerceProviderProperties.getBaseURL())
                         .path("/wp-json/wc/v3/products")
                         .queryParam("sku", latest.getSku())
                         .build())
-                .header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
+//                .header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY", "WOO_CONSUMER_SECRET")))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<WooCommerceProductDTO>>() {})
                 .block();
@@ -61,10 +68,11 @@ public class ShopifyController {
             webClient.put()
                     .uri(uriBuilder -> uriBuilder
                             .scheme("https")
-                            .host("ecom-tiheymas-agdwu.wpcomstaging.com")
+                            .host(wooCommerceProviderProperties.getBaseURL())
                             .path("/wp-json/wc/v3/products/{id}")
                             .build(productId))
-					.header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
+//					.header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
+                    .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY", "WOO_CONSUMER_SECRET")))
                     .bodyValue(Map.of("stock_quantity", latest.getInventoryQuantity()))
                     .retrieve()
                     .toBodilessEntity()

@@ -5,6 +5,7 @@ import com.example.demo.domain.ShopifyGraphQLResponse;
 import com.example.demo.domain.WooCommerceCallbackRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("woo")
 @RequiredArgsConstructor
+@Slf4j
 public class WooCommerceController {
 
 
@@ -34,12 +36,37 @@ public class WooCommerceController {
 
         ShopifyGraphQLResponse resp = getProductBySku(wooCommerceCallbackRequest.getSku()).block();
 
-        assert resp != null;
-        var variant = resp.data().productVariants().edges().get(0).node();
+        var variantOpt = resp.data()
+                .productVariants().edges().stream().findFirst()
+                .map(edge -> edge.node());
 
-        String gidInventoryItem  = variant.inventoryItem().id();
-        String gidLocation  = variant.inventoryItem().inventoryLevels()
-                .edges().get(0).node().location().id();
+        if (variantOpt.isEmpty()) {
+            log.warn("No product variant found");
+            return ResponseEntity.ok().build();
+        }
+
+        var gidInventoryItem = variantOpt
+                .map(v -> v.inventoryItem())
+                .map(item -> item.id())
+                .orElse(null);
+
+        if (gidInventoryItem == null) {
+            log.warn("Inventory item ID missing for variant");
+            return ResponseEntity.ok().build();
+        }
+
+        var gidLocation = variantOpt
+                .map(v -> v.inventoryItem())
+                .map(item -> item.inventoryLevels().edges().stream().findFirst())
+                .flatMap(optEdge -> optEdge.map(edge -> edge.node().location().id()))
+                .orElse(null);
+
+        if (gidLocation == null) {
+            log.warn("Location ID missing for inventory item {}", gidInventoryItem);
+            return ResponseEntity.ok().build();
+        }
+
+        log.info("Inventory Item: {}, Location: {}", gidInventoryItem, gidLocation);
 
         String locationId = extractIdFromGid(gidLocation);
         String inventoryItemId = extractIdFromGid(gidInventoryItem);

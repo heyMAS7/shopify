@@ -53,7 +53,7 @@ public class ShopifyController {
                         .queryParam("sku", latest.getSku())
                         .build())
 //                .header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
-                .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY", "WOO_CONSUMER_SECRET")))
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY"), environment.getProperty("WOO_CONSUMER_SECRET")))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<WooCommerceProductDTO>>() {})
                 .block();

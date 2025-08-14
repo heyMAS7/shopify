@@ -74,7 +74,7 @@ public class WooCommerceController {
         Map<String, String> body = Map.of("location_id", locationId,
                 "inventory_item_id", inventoryItemId,
                 "available", wooCommerceCallbackRequest.getStockQuantity());
-
+        log.info(body.toString());
         JsonNode block = webClient.post()
                 .uri(baseURl + "/admin/api/2025-01/inventory_levels/set.json")
                 .header("X-Shopify-Access-Token", environment.getProperty("Shopify_Token"))

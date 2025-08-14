@@ -43,7 +43,7 @@ public class ShopifyController {
 
         assert latest != null;
 
-        log.info(latest.toString());
+        log.info("ProductVariant" + latest);
 
         List<WooCommerceProductDTO> productDTO = webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -52,7 +52,6 @@ public class ShopifyController {
                         .path("/wp-json/wc/v3/products")
                         .queryParam("sku", latest.getSku())
                         .build())
-//                .header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
                 .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY"), environment.getProperty("WOO_CONSUMER_SECRET")))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<WooCommerceProductDTO>>() {})
@@ -71,8 +70,7 @@ public class ShopifyController {
                             .host(wooCommerceProviderProperties.getBaseURL())
                             .path("/wp-json/wc/v3/products/{id}")
                             .build(productId))
-//					.header("Authorization", "Basic Y2tfMzUyNGEyOGE5NWU2M2E2NThlZGMxNTBiNDlmODVlNzExNmJjYWExMzpjc180Y2U4MWEyYzJmOTllOGE1OWMxOWU1YTdmMzM4MDQxY2I4YWY4Mzg1")
-                    .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY", "WOO_CONSUMER_SECRET")))
+                    .headers(httpHeaders -> httpHeaders.setBasicAuth(environment.getProperty("WOO_CONSUMER_KEY"), environment.getProperty("WOO_CONSUMER_SECRET")))
                     .bodyValue(Map.of("stock_quantity", latest.getInventoryQuantity()))
                     .retrieve()
                     .toBodilessEntity()
